@@ -1,4 +1,14 @@
 # yt-down-playlist
+## ⚠ Warning
+> This script will delete the video from the playlist after download is finished.
+> You can always remove the functionality by commenting out the following code snippet from the `your_script.py`.
+>
+>```python
+>      if remove_video_from_playlist(youtube_service, video_id):
+>        print(f"\nVideo with ID '{video_id}' removed from the playlist.")
+>      else:
+>        print(f"\nFailed to remove video with ID '{video_id}' from the playlist.")
+>```
 
 ## Introduction
 
