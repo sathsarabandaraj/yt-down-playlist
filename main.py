@@ -96,14 +96,27 @@ def download_video(video_id):
 
 def remove_video_from_playlist(youtube, video_id):
     try:
-        response = youtube.playlistItems().delete(id=video_id).execute()
-        print("\nDelete Response:", response)
-        return True
+        playlist_request = youtube.playlistItems().list(
+            part="id",
+            playlistId=PLAYLIST_ID,
+            videoId=video_id
+        )
+        playlist_response = playlist_request.execute()
+
+        if "items" in playlist_response and playlist_response["items"]:
+            playlist_item_id = playlist_response["items"][0]["id"]
+
+            response = youtube.playlistItems().delete(id=playlist_item_id).execute()
+            print("\nDelete Response:", response)
+            return True
+        else:
+            print(f"\nPlaylist item not found for video with ID '{video_id}'.")
+            return False
     except Exception as e:
         print("\nAn error occurred while removing the video:", str(e))
         return False
 
-def print_granted_scopes(credentials_path):
+def print_granted_scopes(credentials_path): 
     with open(credentials_path, "rb") as credentials_file:
         credentials = pickle.load(credentials_file)
         print("Granted Scopes:", credentials.scopes)
@@ -145,3 +158,4 @@ if __name__ == "__main__":
                 print(f"\nFailed to remove video with ID '{video_id}' from the playlist.")
         else:
             print(f"\nFailed to download video with ID '{video_id}'.")
+    
